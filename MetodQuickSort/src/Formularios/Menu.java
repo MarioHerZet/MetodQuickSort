@@ -5,18 +5,108 @@
  */
 package Formularios;
 
+import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author SoulO
  */
 public class Menu extends javax.swing.JFrame {
-
+    Articulo articulos[];
+    Articulo artOrdAsc[];
+    Articulo artOrdDes[];
     /**
      * Creates new form Menu
      */
     public Menu() {
         initComponents();
         this.setLocationRelativeTo(null);
+    }
+    
+    void AmpliarVector(Articulo nuevo) {
+        if(articulos != null) {
+            Articulo aux[] = new Articulo[articulos.length+1];
+            for (int i = 0; i < articulos.length; i++) {
+                aux[i] = articulos[i];
+            }
+            aux[articulos.length] = nuevo;
+            articulos = aux;
+        } else {
+            articulos = new Articulo[1];
+            articulos[0] = nuevo;
+        }
+    }
+    
+    void QuickSortDes(Articulo A[], int izq, int der) {
+        int i = izq;
+        int j = der;
+ 
+        // Toma el elemto del punto mas central como pivote
+        Articulo pivot = A[izq + (der - izq) / 2];
+ 
+        // Divide el vector en dos vectores
+        while (i <= j) {
+
+            while (A[i].nombre.compareToIgnoreCase(pivot.nombre) > 0) {
+                i++;
+            }
+            while (A[j].nombre.compareToIgnoreCase(pivot.nombre) < 0) {
+                j--;
+            }
+            if (i <= j) {
+                Articulo aux = A[i];
+                A[i] = A[j];
+                A[j] = aux;
+                
+                i++;
+                j--;
+            }
+        }
+ 
+        // Emplea la recursividad y se llama a si mismo.
+        
+        //Aqui manda un subvectot
+        if (izq < j) {
+            QuickSortDes(A, izq, j);
+        }
+        //Aqui el otro
+        if (i < der) {
+            QuickSortDes(A, i, der);
+        }
+    }
+    
+        void QuickSortAsc(Articulo A[], int izq, int der) {
+        int i = izq;
+        int j = der;
+ 
+        Articulo pivot = A[izq + (der - izq) / 2];
+ 
+        while (i < j) {
+
+            while (A[i].nombre.compareToIgnoreCase(pivot.nombre) < 0 && (i < der)) {
+                i++;
+            }
+            while (A[j].nombre.compareToIgnoreCase(pivot.nombre) > 0 && (j > izq)) {
+                j--;
+            }
+            if (i < j) {
+                Articulo aux = A[i];
+                A[i] = A[j];
+                A[j] = aux;
+                
+                i++;
+                j--;
+            }
+        }
+ 
+        if (izq < j) {
+            QuickSortAsc(A, izq, j);
+        }
+ 
+        if (i < der) {
+            QuickSortAsc(A, i, der);
+        }
     }
 
     /**
@@ -32,24 +122,24 @@ public class Menu extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        txtClave = new javax.swing.JTextField();
+        txtNombre = new javax.swing.JTextField();
+        btnAgregar = new javax.swing.JButton();
+        btnRegresar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tablaCaptura = new javax.swing.JTable();
         DljMostrar = new javax.swing.JDialog();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tablaOrdAsc = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        tablaOrdDes = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
-        jTable4 = new javax.swing.JTable();
-        jButton7 = new javax.swing.JButton();
+        tablaOrdCap = new javax.swing.JTable();
+        btnRegMos = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnCapturar = new javax.swing.JButton();
@@ -66,17 +156,27 @@ public class Menu extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         jLabel3.setText("Nombre:");
 
-        jTextField1.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        txtClave.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
-        jTextField2.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        txtNombre.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
-        jButton5.setText("Capturar");
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
-        jButton6.setText("Regresar");
+        btnRegresar.setText("Regresar");
+        btnRegresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegresarActionPerformed(evt);
+            }
+        });
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tablaCaptura.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -92,13 +192,13 @@ public class Menu extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.getTableHeader().setReorderingAllowed(false);
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(25);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(150);
+        tablaCaptura.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(tablaCaptura);
+        if (tablaCaptura.getColumnModel().getColumnCount() > 0) {
+            tablaCaptura.getColumnModel().getColumn(0).setResizable(false);
+            tablaCaptura.getColumnModel().getColumn(0).setPreferredWidth(25);
+            tablaCaptura.getColumnModel().getColumn(1).setResizable(false);
+            tablaCaptura.getColumnModel().getColumn(1).setPreferredWidth(150);
         }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -113,17 +213,17 @@ public class Menu extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jButton5)
+                                .addComponent(btnAgregar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton6))
+                                .addComponent(btnRegresar))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel3)
                                     .addComponent(jLabel2))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
-                                    .addComponent(jTextField2))))))
+                                    .addComponent(txtClave, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+                                    .addComponent(txtNombre))))))
                 .addGap(12, 12, 12))
         );
         jPanel2Layout.setVerticalGroup(
@@ -131,16 +231,16 @@ public class Menu extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5)
-                    .addComponent(jButton6))
+                    .addComponent(btnAgregar)
+                    .addComponent(btnRegresar))
                 .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(11, 11, 11))
@@ -171,7 +271,7 @@ public class Menu extends javax.swing.JFrame {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Datos ordenados descendentemente");
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tablaOrdAsc.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -187,14 +287,14 @@ public class Menu extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable2);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(0).setResizable(false);
-            jTable2.getColumnModel().getColumn(0).setPreferredWidth(25);
-            jTable2.getColumnModel().getColumn(1).setPreferredWidth(150);
+        jScrollPane2.setViewportView(tablaOrdAsc);
+        if (tablaOrdAsc.getColumnModel().getColumnCount() > 0) {
+            tablaOrdAsc.getColumnModel().getColumn(0).setResizable(false);
+            tablaOrdAsc.getColumnModel().getColumn(0).setPreferredWidth(25);
+            tablaOrdAsc.getColumnModel().getColumn(1).setPreferredWidth(150);
         }
 
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        tablaOrdDes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -210,14 +310,14 @@ public class Menu extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane3.setViewportView(jTable3);
-        if (jTable3.getColumnModel().getColumnCount() > 0) {
-            jTable3.getColumnModel().getColumn(0).setResizable(false);
-            jTable3.getColumnModel().getColumn(0).setPreferredWidth(25);
-            jTable3.getColumnModel().getColumn(1).setPreferredWidth(150);
+        jScrollPane3.setViewportView(tablaOrdDes);
+        if (tablaOrdDes.getColumnModel().getColumnCount() > 0) {
+            tablaOrdDes.getColumnModel().getColumn(0).setResizable(false);
+            tablaOrdDes.getColumnModel().getColumn(0).setPreferredWidth(25);
+            tablaOrdDes.getColumnModel().getColumn(1).setPreferredWidth(150);
         }
 
-        jTable4.setModel(new javax.swing.table.DefaultTableModel(
+        tablaOrdCap.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -233,14 +333,19 @@ public class Menu extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane4.setViewportView(jTable4);
-        if (jTable4.getColumnModel().getColumnCount() > 0) {
-            jTable4.getColumnModel().getColumn(0).setResizable(false);
-            jTable4.getColumnModel().getColumn(0).setPreferredWidth(25);
-            jTable4.getColumnModel().getColumn(1).setPreferredWidth(150);
+        jScrollPane4.setViewportView(tablaOrdCap);
+        if (tablaOrdCap.getColumnModel().getColumnCount() > 0) {
+            tablaOrdCap.getColumnModel().getColumn(0).setResizable(false);
+            tablaOrdCap.getColumnModel().getColumn(0).setPreferredWidth(25);
+            tablaOrdCap.getColumnModel().getColumn(1).setPreferredWidth(150);
         }
 
-        jButton7.setText("Regresar");
+        btnRegMos.setText("Regresar");
+        btnRegMos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegMosActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -263,7 +368,7 @@ public class Menu extends javax.swing.JFrame {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton7)
+                            .addComponent(btnRegMos)
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
@@ -285,7 +390,7 @@ public class Menu extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton7))
+                .addComponent(btnRegMos))
         );
 
         javax.swing.GroupLayout DljMostrarLayout = new javax.swing.GroupLayout(DljMostrar.getContentPane());
@@ -324,9 +429,19 @@ public class Menu extends javax.swing.JFrame {
 
         btnVerDatos.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         btnVerDatos.setText("Ver datos");
+        btnVerDatos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVerDatosActionPerformed(evt);
+            }
+        });
 
         btnSalir.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -383,10 +498,75 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCapturarActionPerformed
 
     private void btnOrdenarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOrdenarActionPerformed
+        artOrdAsc = new Articulo[articulos.length];
+        artOrdDes = new Articulo[articulos.length];
+        for (int i = 0; i < articulos.length; i++) {
+            artOrdAsc[i] = articulos[i];
+            artOrdDes[i] = articulos[i];
+        }
+        QuickSortAsc(artOrdAsc, 0, artOrdAsc.length-1);
+        QuickSortDes(artOrdDes, 0, artOrdDes.length-1);
+        for (Articulo ar : artOrdDes) {
+            System.out.println(ar.nombre);
+        }
+    }//GEN-LAST:event_btnOrdenarActionPerformed
+
+    private void btnVerDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVerDatosActionPerformed
+        Object fila[] = new Object[2];
+        
+        ((DefaultTableModel) tablaOrdCap.getModel()).setRowCount(0);
+        for (int i = 0; i < articulos.length; i++) {
+            fila[0] = articulos[i].clave;
+            fila[1] = articulos[i].nombre;
+            ((DefaultTableModel) tablaOrdCap.getModel()).addRow(fila);
+        }
+        
+        ((DefaultTableModel) tablaOrdAsc.getModel()).setRowCount(0);
+        for (int i = 0; i < articulos.length; i++) {
+            fila[0] = artOrdAsc[i].clave;
+            fila[1] = artOrdAsc[i].nombre;
+            ((DefaultTableModel) tablaOrdAsc.getModel()).addRow(fila);
+        }
+        
+        ((DefaultTableModel) tablaOrdDes.getModel()).setRowCount(0);
+        for (int i = 0; i < articulos.length; i++) {
+            fila[0] = artOrdDes[i].clave;
+            fila[1] = artOrdDes[i].nombre;
+            ((DefaultTableModel) tablaOrdDes.getModel()).addRow(fila);
+        }
+        
         DljMostrar.setVisible(true);
         DljMostrar.pack();
         DljMostrar.setLocationRelativeTo(this);
-    }//GEN-LAST:event_btnOrdenarActionPerformed
+    }//GEN-LAST:event_btnVerDatosActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_btnSalirActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        int clave = Integer.parseInt(txtClave.getText());
+        String nombre = txtNombre.getText();
+        Articulo nuevo = new Articulo(clave, nombre);
+        AmpliarVector(nuevo);
+        
+        txtClave.setText("");
+        txtNombre.setText("");
+        txtClave.requestFocus();
+        
+        Object fila[] = new Object[2];
+        fila[0] = clave;
+        fila[1] = nombre;
+        ((DefaultTableModel) tablaCaptura.getModel()).addRow(fila);
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
+    private void btnRegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegresarActionPerformed
+        DljCaptura.dispose();
+    }//GEN-LAST:event_btnRegresarActionPerformed
+
+    private void btnRegMosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegMosActionPerformed
+        DljMostrar.dispose();
+    }//GEN-LAST:event_btnRegMosActionPerformed
 
     /**
      * @param args the command line arguments
@@ -426,13 +606,13 @@ public class Menu extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDialog DljCaptura;
     private javax.swing.JDialog DljMostrar;
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnCapturar;
     private javax.swing.JButton btnOrdenar;
+    private javax.swing.JButton btnRegMos;
+    private javax.swing.JButton btnRegresar;
     private javax.swing.JButton btnSalir;
     private javax.swing.JButton btnVerDatos;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -446,11 +626,11 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
-    private javax.swing.JTable jTable4;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTable tablaCaptura;
+    private javax.swing.JTable tablaOrdAsc;
+    private javax.swing.JTable tablaOrdCap;
+    private javax.swing.JTable tablaOrdDes;
+    private javax.swing.JTextField txtClave;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

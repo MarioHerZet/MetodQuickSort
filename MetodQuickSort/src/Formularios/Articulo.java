@@ -3,19 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package mezcla;
+package Formularios;
 
 /**
  *
  * @author SoulO
  */
-public class Mezcla {
+public class Articulo {
+    int clave;
+    String nombre;
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
+    public Articulo(int clave, String nombre) {
+        this.clave = clave;
+        this.nombre = nombre;
     }
     
 }
